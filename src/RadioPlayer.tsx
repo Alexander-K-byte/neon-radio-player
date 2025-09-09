@@ -1,57 +1,96 @@
-import React, { useState, useRef } from "react";
-import "./RadioPlayer.css"
-// Step 1: Type Definition
+import React, { useState, useRef, useEffect } from "react";
+import "./RadioPlayer.css";
+
+// ==========================
+// Step 1: Type Definitions
+// ==========================
 interface Station {
     name: string;
     url: string;
     description?: string;
+    stationuuid?: string;
 }
-const RadioPlayer = () => {
-    // Step 2: Stations State
-    const [stations, setStations] = useState<Station[]>([
-        { name: "Radio rock", url: "https://live-bauerno.sharp-stream.com/simulcast3_no.mp3", description: "Euro Rock" },
-        { name: "90's grunge", url: "https://corn.kvsc.org/radiox", description: "Euro Grunge" },
-        { name: "Radio X", url: "https://media-ssl.musicradio.com/RadioX-M-Britpop", description: "Brit Pop" }
-    ]);
 
+// ==========================
+// Step 2: Component
+// ==========================
+const RadioPlayer = () => {
     // ==========================
-    // Step 3: Other States
+    // Server & Stations State
     // ==========================
+    const [servers, setServers] = useState<string[]>([]);
+    const [currentServer, setCurrentServer] = useState<string | null>(null);
+
+    const [allStations, setAllStations] = useState<Station[]>([]);
+    const [filteredStations, setFilteredStations] = useState<Station[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
+
     const [currentStation, setCurrentStation] = useState<Station | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [volume, setVolume] = useState<number>(0.1);
 
-    // Form states
+    // Add/Delete Form States
     const [newName, setNewName] = useState<string>("");
     const [newUrl, setNewUrl] = useState<string>("");
     const [newDescription, setNewDescription] = useState<string>("");
+    const [deleteName, setDeleteName] = useState<string>("");
 
-    // ==========================
-    // Step 4: Audio Ref
-    // ==========================
+    // Audio Ref
     const audioRef = useRef<HTMLAudioElement>(null);
 
     // ==========================
-    // Step 5: Player Functions
+    // Step 3: Fetch Servers & Stations
+    // ==========================
+    const fetchServersAndStations = async () => {
+        try {
+            const hostnames = ["https://fi1.api.radio-browser.info", "https://de2.api.radio-browser.info"];
+            setServers(hostnames);
+
+            const server = hostnames[Math.floor(Math.random() * hostnames.length)];
+            setCurrentServer(server);
+
+            const stationsRes = await fetch(`${server}/json/stations`, {
+                headers: { "User-Agent": "MyCoolRadioApp/1.0" },
+            });
+            const stationsData: Station[] = await stationsRes.json();
+
+            setAllStations(stationsData);
+            setFilteredStations([]); // start empty until user searches
+        } catch (err) {
+            console.error("Error fetching servers or stations:", err);
+            // Fallback default stations
+            const defaultStations: Station[] = [
+                { name: "Radio rock", url: "https://live-bauerno.sharp-stream.com/simulcast3_no.mp3", description: "Euro Rock" },
+                { name: "90's grunge", url: "https://corn.kvsc.org/radiox", description: "Euro Grunge" },
+                { name: "Radio X", url: "https://media-ssl.musicradio.com/RadioX-M-Britpop", description: "Brit Pop" },
+            ];
+            setAllStations(defaultStations);
+            setFilteredStations([]);
+        }
+    };
+
+    useEffect(() => {
+        fetchServersAndStations();
+    }, []);
+
+    // ==========================
+    // Step 4: Player Functions
     // ==========================
     const playStation = (station: Station) => {
         if (!audioRef.current) return;
-
         audioRef.current.src = station.url;
         audioRef.current.volume = volume;
-
         audioRef.current
             .play()
             .then(() => {
                 setCurrentStation(station);
                 setIsPlaying(true);
             })
-            .catch((err: any) => console.error("Playback failed:", err));
+            .catch((err) => console.error("Playback failed:", err));
     };
 
     const togglePlay = () => {
         if (!audioRef.current) return;
-
         if (isPlaying) {
             audioRef.current.pause();
             setIsPlaying(false);
@@ -66,6 +105,9 @@ const RadioPlayer = () => {
         if (audioRef.current) audioRef.current.volume = newVolume;
     };
 
+    // ==========================
+    // Step 5: Add / Delete Stations
+    // ==========================
     const addStation = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newName || !newUrl) return;
@@ -73,46 +115,71 @@ const RadioPlayer = () => {
         const newStation: Station = {
             name: newName,
             url: newUrl,
-            description: newDescription || "No description"
+            description: newDescription || "No description",
+            stationuuid: newName,
         };
 
-        setStations([...stations, newStation]);
+        setAllStations([...allStations, newStation]);
         setNewName("");
         setNewUrl("");
         setNewDescription("");
     };
 
-    const [deleteName, setDeleteName] = useState<string>("");
-
     const deleteStationByName = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!deleteName) return;
 
-        setStations(stations.filter((station) => station.name.toLowerCase() !== deleteName.toLowerCase()));
-        setDeleteName(""); // clear input after delete
+        setAllStations(allStations.filter((station) => station.name.toLowerCase() !== deleteName.toLowerCase()));
+        setDeleteName("");
     };
 
+    // ==========================
+    // Step 6: Search Functionality (Enter Only)
+    // ==========================
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const filtered = allStations.filter(
+                (station) =>
+                    station.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (station.description?.toLowerCase().includes(searchQuery.toLowerCase()))
+            );
+            setFilteredStations(filtered);
+        }
+    };
 
     // ==========================
-    // Step 6: Rendering (TSX)
+    // Step 7: Render
     // ==========================
     return (
         <div className="radio-app">
             <h1>🎵 Neon Radio Player</h1>
 
-            {/* Player Section (centered) */}
-            <div className="player-section">
-                {stations.map((station, index) => (
+            {/* Search Box */}
+            <input
+                type="text"
+                placeholder="Search stations..."
+                value={searchQuery}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+                className="station-search"
+            />
+
+            {/* Scrollable Station List */}
+            <div className="station-list-container">
+                {filteredStations.map((station) => (
                     <div
-                        key={index}
-                        className={`station-card ${currentStation?.name === station.name ? "active" : ""}`}
+                        key={station.stationuuid || station.name}
+                        className={`station-card ${currentStation?.stationuuid === station.stationuuid ? "active" : ""}`}
                         onClick={() => playStation(station)}
                     >
                         <span className="station-name">{station.name}</span>
                         <div className="tooltip">{station.description}</div>
-
-                        {/* Play/Pause button */}
-                        {currentStation?.name === station.name && (
+                        {currentStation?.stationuuid === station.stationuuid && (
                             <button
                                 onClick={(e) => { e.stopPropagation(); togglePlay(); }}
                                 className="play-btn"
@@ -122,32 +189,31 @@ const RadioPlayer = () => {
                         )}
                     </div>
                 ))}
-
-                {/* Now Playing + Volume Slider */}
-                {currentStation && (
-                    <div className="now-playing">
-                        <p>Now Playing: <strong>{currentStation.name}</strong></p>
-                        <label htmlFor="volume">Volume</label>
-                        <input
-                            type="range"
-                            id="volume"
-                            min="0"
-                            max="1"
-                            step="0.01"
-                            value={volume}
-                            onChange={handleVolumeChange}
-                        />
-                    </div>
-                )}
             </div>
 
-            {/* Hidden audio element */}
+            {/* Centered Player */}
+            {currentStation && (
+                <div className="now-playing">
+                    <p>Now Playing: <strong>{currentStation.name}</strong></p>
+                    <label htmlFor="volume">Volume</label>
+                    <input
+                        type="range"
+                        id="volume"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value={volume}
+                        onChange={handleVolumeChange}
+                    />
+                </div>
+            )}
+
             <audio ref={audioRef} />
 
-            {/* Add Station Form - fixed bottom left */}
+            {/* Add Station Form - Bottom Left */}
             <div className="form-floating-left">
                 <form onSubmit={addStation} className="add-station-form">
-                    <h3>Add New Station</h3>
+                    <h3>Add Station</h3>
                     <input
                         type="text"
                         placeholder="Station Name"
@@ -157,7 +223,7 @@ const RadioPlayer = () => {
                     />
                     <input
                         type="text"
-                        placeholder="Station Stream URL"
+                        placeholder="Stream URL"
                         value={newUrl}
                         onChange={(e) => setNewUrl(e.target.value)}
                         required
@@ -168,15 +234,17 @@ const RadioPlayer = () => {
                         value={newDescription}
                         onChange={(e) => setNewDescription(e.target.value)}
                     />
-                    <button type="submit">Add Station</button>
+                    <button type="submit">Add</button>
                 </form>
             </div>
+
+            {/* Delete Station Form - Bottom Right */}
             <div className="form-floating-right">
                 <form onSubmit={deleteStationByName} className="delete-station-form">
                     <h3>Delete Station</h3>
                     <input
                         type="text"
-                        placeholder="Enter Station Name"
+                        placeholder="Station Name"
                         value={deleteName}
                         onChange={(e) => setDeleteName(e.target.value)}
                         required
@@ -189,6 +257,6 @@ const RadioPlayer = () => {
 };
 
 // ==========================
-// Step 7: Export at Bottom
+// Export at Bottom
 // ==========================
 export default RadioPlayer;
