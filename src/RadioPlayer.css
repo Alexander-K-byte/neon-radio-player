@@ -1,308 +1,344 @@
 /* Neon Pulse Animation Keyframes */
 @keyframes neonPulse {
-    0% {
-        box-shadow: 0 0 6px #00ffa3, 0 0 12px #00ffcc;
-    }
+	0% {
+		box-shadow:
+			0 0 6px #00ffa3,
+			0 0 12px #00ffcc;
+	}
 
-    50% {
-        box-shadow: 0 0 12px #00ffa3, 0 0 24px #00ff00;
-    }
+	50% {
+		box-shadow:
+			0 0 12px #00ffa3,
+			0 0 24px #00ff00;
+	}
 
-    100% {
-        box-shadow: 0 0 6px #00ffa3, 0 0 12px #00ffcc;
-    }
+	100% {
+		box-shadow:
+			0 0 6px #00ffa3,
+			0 0 12px #00ffcc;
+	}
 }
 
 /* Body & Page */
 body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #010101;
-    font-family: 'Franklin Gothic Medium', sans-serif;
-    color: #00ffa3;
+	margin: 0;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #010101;
+	font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+	color: #00ffa3;
+	font-size: x-small;
 }
 
 /* Main App Wrapper */
 .radio-app {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    background: #121212;
-    color: #00ffa3;
-    text-align: center;
-    padding: 2rem;
-    position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	min-height: 100vh;
+	background: #121212;
+	color: #00ffa3;
+	text-align: center;
+	padding: 2rem;
 }
 
 /* Player Section */
 .player-section {
-    width: 100%;
-    max-width: 800px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1rem;
+	width: 100%;
+	max-width: 800px;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-top: 1rem;
+	padding-bottom: 2rem;
 }
 
 /* Station List Container (Scrollable) */
 .station-list-container {
-    position: relative;
-    max-height: calc(100vh - 250px);
-    /* leave space for header and forms */
-    overflow-y: auto;
-    width: 100%;
-    max-width: 800px;
-    padding: 0.5rem;
+	position: relative;
+	max-height: calc(100vh - 25px);
+	/* leave space for header and forms */
+	overflow-y: auto;
+	width: 100%;
+	max-width: 800px;
+	padding: 0.5rem;
 }
 
 /* Station Cards */
 .station-card {
-    position: relative;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    background: #1e1e1e;
-    border: 2px solid #00ffa3;
-    margin-bottom: 0.75rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.1s, border-color 0.3s, box-shadow 0.3s;
+	max-height: min-content;
+	position: relative;
+	border-radius: 0.8rem;
+	background: #1e1e1e;
+	border: 2px solid #00ffa3;
+	margin-bottom: 0.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: pointer;
+	transition:
+		background 0.3s,
+		transform 0.1s,
+		border-color 0.3s,
+		box-shadow 0.3s;
 }
 
 .station-card:hover {
-    background: #2a2a2a;
-    transform: scale(1.02);
-    box-shadow: 0 0 12px #00ffa3;
+	background: #2a2a2a;
+	transform: scale(1.02);
+	box-shadow: 0 0 12px #00ffa3;
 }
 
 /* Active Station Card with Pulse */
 .station-card.active {
-    border-image: linear-gradient(45deg, #00ffa3, #00ffcc) 1;
-    border-style: solid;
-    border-width: 2px;
-    background: #262626;
-    animation: neonPulse 2s infinite;
-    color: #00ffa3;
+	border-image: linear-gradient(45deg, #00ffa3, #00ffcc) 1;
+	border-style: solid;
+	border-width: 2px;
+	background: #262626;
+	animation: neonPulse 2s infinite;
+	color: #00ffa3;
 }
 
 /* Station Name */
 .station-name {
-    font-weight: 600;
-    color: #00ffa3;
-    text-shadow: 0 0 4px #00ffa3;
+	font-weight: 600;
+	color: #00ffa3;
+	text-shadow: 0 0 4px #00ffa3;
 }
 
 /* Tooltip */
 .station-card .tooltip {
-    visibility: hidden;
-    width: 220px;
-    background-color: #00ffa3;
-    color: #121212;
-    text-align: left;
-    border-radius: 6px;
-    padding: 0.5rem;
-    position: absolute;
-    z-index: 10;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s;
-    font-size: 0.85rem;
-    box-shadow: 0 0 8px #00ffa3, 0 0 12px #00ffcc;
+	visibility: hidden;
+	width: 220px;
+	background-color: #00ffa3;
+	color: #121212;
+	text-align: left;
+	border-radius: 6px;
+	padding: 0.5rem;
+	position: absolute;
+	z-index: 10;
+	bottom: 125%;
+	left: 50%;
+	transform: translateX(-50%);
+	opacity: 0;
+	transition: opacity 0.3s;
+	font-size: 0.85rem;
+	box-shadow:
+		0 0 8px #00ffa3,
+		0 0 12px #00ffcc;
 }
 
 .station-card:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
+	visibility: visible;
+	opacity: 1;
 }
 
 .station-card .tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #00ffa3 transparent transparent transparent;
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #00ffa3 transparent transparent transparent;
 }
 
 /* Play Button */
 .play-btn {
-    padding: 0.4rem 0.8rem;
-    background: #00ffa3;
-    border: none;
-    color: #121212;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s;
-    text-shadow: 0 0 4px #00ffa3;
+	padding: 0.4rem 0.8rem;
+	background: #00ffa3;
+	border: none;
+	color: #121212;
+	border-radius: 0.5rem;
+	cursor: pointer;
+	transition:
+		background 0.2s,
+		box-shadow 0.2s;
+	text-shadow: 0 0 4px #00ffa3;
 }
 
 .play-btn:hover {
-    background: #00cc80;
-    box-shadow: 0 0 8px #00ffa3, 0 0 12px #00ffcc;
+	background: #00cc80;
+	box-shadow:
+		0 0 8px #00ffa3,
+		0 0 12px #00ffcc;
 }
 
 /* Now Playing Section with Pulse */
 .now-playing {
-    margin-top: 1.5rem;
-    text-align: center;
-    font-size: 1.2rem;
-    color: #00ffa3;
-    text-shadow: 0 0 6px #00ffa3, 0 0 12px #00ffcc;
-    font-weight: 600;
-    animation: neonPulse 2s infinite;
+	margin-top: 1.5rem;
+	text-align: center;
+	font-size: 1.2rem;
+	color: #00ffa3;
+	text-shadow:
+		0 0 6px #00ffa3,
+		0 0 12px #00ffcc;
+	font-weight: 600;
+	animation: neonPulse 2s infinite;
 }
 
 /* Volume Slider */
 input[type="range"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: #333333;
-    outline: none;
-    margin-top: 0.25rem;
+	appearance: none;
+	-webkit-appearance: none;
+	width: 100%;
+	height: 6px;
+	border-radius: 3px;
+	background: #333333;
+	outline: none;
+	margin-top: 0.25rem;
 }
 
 input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #00ffa3;
-    cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s;
+	appearance: none;
+	-webkit-appearance: none;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #00ffa3;
+	cursor: pointer;
+	transition:
+		background 0.2s,
+		box-shadow 0.2s;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-    background: #00cc80;
-    box-shadow: 0 0 6px #00ffa3, 0 0 10px #00ffcc;
+	background: #00cc80;
+	box-shadow:
+		0 0 6px #00ffa3,
+		0 0 10px #00ffcc;
 }
 
 input[type="range"]::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #00ffa3;
-    cursor: pointer;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #00ffa3;
+	cursor: pointer;
 }
 
 /* Floating Forms - Add/Delete */
 .form-floating-left,
 .form-floating-right {
-    position: fixed;
-    bottom: 1rem;
-    width: 300px;
-    z-index: 1000;
+	position: fixed;
+	bottom: 1rem;
+	max-width: 20vw;
+	z-index: 1000;
 }
 
 .form-floating-left {
-    left: 1rem;
+	left: 1rem;
 }
 
 .form-floating-right {
-    right: 1rem;
+	right: 1rem;
 }
 
 /* Add Station Form */
 .add-station-form {
-    background: #1e1e1e;
-    border: 2px solid #00ffa3;
-    border-radius: 1rem;
-    padding: 1rem;
-    box-shadow: 0 0 10px #00ffa3;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+	background: #1e1e1e;
+	border: 2px solid #00ffa3;
+	border-radius: 1rem;
+	padding: 1rem;
+	box-shadow: 0 0 10px #00ffa3;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
 }
 
 .add-station-form h3 {
-    margin-bottom: 0.5rem;
-    color: #00ffa3;
-    text-align: center;
+	margin-bottom: 0.5rem;
+	color: #00ffa3;
+	text-align: center;
 }
 
 .add-station-form input {
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    border: 2px solid #00ffa3;
-    background: #121212;
-    color: #00ffa3;
-    outline: none;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	border: 2px solid #00ffa3;
+	background: #121212;
+	color: #00ffa3;
+	outline: none;
 }
 
 .add-station-form button {
-    padding: 0.5rem;
-    background: #00ffa3;
-    color: #121212;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: bold;
-    cursor: pointer;
+	padding: 0.5rem;
+	background: #00ffa3;
+	color: #121212;
+	border: none;
+	border-radius: 0.5rem;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 .add-station-form button:hover {
-    background: #00cc80;
+	background: #00cc80;
 }
 
 /* Delete Station Form */
 .delete-station-form {
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #ff4d4d;
-    border-radius: 1rem;
-    padding: 1rem;
-    box-shadow: 0 0 15px #ff4d4d;
-    color: #fff;
+	background: rgba(0, 0, 0, 0.8);
+	border: 2px solid #ff4d4d;
+	border-radius: 1rem;
+	padding: 1rem;
+	box-shadow: 0 0 15px #ff4d4d;
+	color: #fff;
 }
 
 .delete-station-form input {
-    width: 100%;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    border: none;
+	width: 100%;
+	margin-bottom: 0.5rem;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	border: none;
 }
 
 .delete-station-form button {
-    background: #ff4d4d;
-    color: #fff;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background 0.2s ease;
+	background: #ff4d4d;
+	color: #fff;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: 0.5rem;
+	cursor: pointer;
+	transition: background 0.2s ease;
 }
 
 .delete-station-form button:hover {
-    background: #cc0000;
+	background: #cc0000;
+}
+
+.station-select-btn {
+	all: unset;
+	cursor: pointer;
+	flex: 1;
+	padding: 1rem;
+	color: #00ffa3;
+	text-shadow: 0 0 4px #00ffa3;
+}
+
+.station-select-btn:hover {
+	background: #2a2a2a;
 }
 
 /* Responsive Tweaks */
 @media (max-width: 768px) {
-    .station-card {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+	.station-card {
+		flex-direction: column;
+		align-items: flex-start;
+	}
 
-    .play-btn {
-        margin-top: 0.5rem;
-        width: 100%;
-    }
+	.play-btn {
+		margin-top: 0.5rem;
+		width: 100%;
+	}
 }
 
 @media (max-width: 480px) {
-    .now-playing {
-        font-size: 1rem;
-    }
+	.now-playing {
+		font-size: 1rem;
+	}
 }
